@@ -55,4 +55,4 @@ If you find a bug or have an idea for a cooler winning animation, feel free to o
 ---
 *Enjoy the game!*
 
-<video controls src="Screen Recording 2025-12-02 at 7.52.02 AM.mov" title="Demo Play"></video>
+<video controls src="gameplay_demo.mov" title="Demo Play" width="100%"></video>
