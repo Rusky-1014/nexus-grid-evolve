@@ -23,14 +23,14 @@ function initializeGame(level) {
     currentLevel = level;
     currentBoardSize = currentLevel + 2; // Level 1 -> 3x3, Level 2 -> 4x4, etc.
     // Winning condition: 3-in-a-row for 3x3, 4 for 4x4, 5 for 5x5 and larger boards.
-    winCondition = Math.min(currentBoardSize, 5); 
-    
+    winCondition = Math.min(currentBoardSize, 5);
+
     board = Array.from({ length: currentBoardSize }, () =>
         Array(currentBoardSize).fill('')
     );
     currentPlayer = 'X'; // Player X always starts
     gameActive = true;
-    
+
     messageDisplay.style.opacity = '0';
     messageDisplay.style.pointerEvents = 'none'; // Ensure clicks pass through when hidden
     renderBoard();
@@ -57,11 +57,11 @@ function renderBoard() {
 // --- Update UI Display (Level, Turn, Score) ---
 function updateDisplay() {
     levelDisplay.textContent = `Level: ${currentLevel} (${currentBoardSize}x${currentBoardSize})`;
-    
+
     const playerSymbolSpan = document.createElement('span');
     playerSymbolSpan.classList.add('current-player-symbol', `player-${currentPlayer}`);
     playerSymbolSpan.textContent = currentPlayer;
-    
+
     turnDisplay.innerHTML = ''; // Clear previous content
     turnDisplay.append('Player ', playerSymbolSpan, `'s Turn`);
 
@@ -123,7 +123,7 @@ function checkWin(row, col, player) {
 function countConsecutive(row, col, dr, dc, player) {
     let count = 0;
     // Iterate up to winCondition - 1 steps (as the initial cell is already counted)
-    for (let i = 1; i < winCondition; i++) { 
+    for (let i = 1; i < winCondition; i++) {
         const newRow = row + dr * i;
         const newCol = col + dc * i;
 
@@ -175,7 +175,7 @@ function handleGameEnd(result) {
         draws++;
         message = 'It\'s a Draw!';
         // Custom gradient for draw messages
-        messageDisplay.style.backgroundImage = 'linear-gradient(45deg, #a770ef 0%, #cf8bf3 50%, #fbc2eb 100%)'; 
+        messageDisplay.style.backgroundImage = 'linear-gradient(45deg, #a770ef 0%, #cf8bf3 50%, #fbc2eb 100%)';
         showMessage(message);
     }
     updateDisplay();
@@ -189,11 +189,12 @@ function showMessage(msg) {
     messageDisplay.style.animation = 'none'; // Reset animation
     void messageDisplay.offsetWidth; // Trigger reflow
     messageDisplay.style.animation = 'fadeInScale 0.5s forwards'; // Re-apply animation
-    
-    // Hide message after a delay, unless it's a win that leads to a new level
-    if (!msg.includes('Wins!') || currentLevel >= maxLevel) { // For AI wins, draws, or player wins at max level
-         setTimeout(() => {
-            if(!gameActive) { // Only hide if the game is still inactive (i.e. not immediately restarting for next level)
+
+    // Hide message after a delay, unless it's a player win that leads to a new level
+    if (msg !== 'Player X Wins!' || currentLevel >= maxLevel) {
+        setTimeout(() => {
+            if (!gameActive) { // Only hide if the game is still inactive (i.e. not immediately restarting for next level)
+                messageDisplay.style.animation = 'none'; // Stop animation so it doesn't override opacity
                 messageDisplay.style.opacity = '0';
                 messageDisplay.style.pointerEvents = 'none';
             }
@@ -248,7 +249,7 @@ function aiMove() {
             }
         }
     }
-    
+
     // After AI's move, check for draw
     if (checkDraw()) {
         handleGameEnd('Draw');
